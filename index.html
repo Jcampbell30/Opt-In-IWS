@@ -66,5 +66,26 @@
         }());
         </script>
         _-->
+        <script>
+        //function to call open_db_connection
+        (async function() {
+            try {
+                const response = await fetch(`/open_db_connection`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new TypeError('Received non-JSON response');
+                }
+                const data = await response.json();
+                document.querySelector('#name').textContent = data.text || data.message;
+            } catch (error) {
+                console.error('Error fetching API:', error);
+                document.querySelector('#name').textContent = 'Error fetching data';
+            }
+        }());
+
+        </script>
 </body>
 </html>
