@@ -1,5 +1,6 @@
 import azure.functions as func
 import logging
+import json
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
@@ -17,9 +18,16 @@ def http_submit_opt_in(req: func.HttpRequest) -> func.HttpResponse:
             name = req_body.get('name')
 
     if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        response = {
+            "message": f"Hello, {name}. This HTTP triggered function executed successfully."
+        }
     else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+        response = {
+            "message": "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
+        }
+
+    return func.HttpResponse(
+        json.dumps(response),
+        mimetype="application/json",
+        status_code=200
+    )
